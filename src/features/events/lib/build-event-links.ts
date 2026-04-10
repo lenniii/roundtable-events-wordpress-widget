@@ -1,7 +1,11 @@
 import { EVENTS_BASE_URL } from "../constants";
 
-function toGoogleCalendarDate(value: string): string {
-  return new Date(value)
+function isValidDate(date: Date): boolean {
+  return !Number.isNaN(date.getTime());
+}
+
+function toGoogleCalendarDate(date: Date): string {
+  return date
     .toISOString()
     .replace(/[-:]/g, "")
     .replace(/\.\d{3}Z$/, "Z");
@@ -30,11 +34,18 @@ export function buildCalendarUrl(input: {
     return null;
   }
 
-  const endDate = input.endDate ?? input.startDate;
+  const startDate = new Date(input.startDate);
+
+  if (!isValidDate(startDate)) {
+    return null;
+  }
+
+  const endDate = input.endDate ? new Date(input.endDate) : startDate;
+  const safeEndDate = isValidDate(endDate) ? endDate : startDate;
   const searchParams = new URLSearchParams({
     action: "TEMPLATE",
     text: input.title,
-    dates: `${toGoogleCalendarDate(input.startDate)}/${toGoogleCalendarDate(endDate)}`,
+    dates: `${toGoogleCalendarDate(startDate)}/${toGoogleCalendarDate(safeEndDate)}`,
   });
 
   if (input.description) {
