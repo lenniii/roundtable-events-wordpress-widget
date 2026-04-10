@@ -1,5 +1,6 @@
 import type { Activity } from "./types";
 
+// Fixed snapshot of real activity payloads for UI reproduction, not a future-proof upcoming-events fixture set.
 export const mockActivities: Activity[] = [
   {
     id: 294,
