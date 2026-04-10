@@ -13,6 +13,20 @@ export type Activity = {
   longitude: string | null;
 };
 
+export type StatutoryYear = {
+  name: string;
+  is_current: boolean;
+  start_date: string;
+  end_date: string;
+};
+
+export type ActivitiesResponse = {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Activity[];
+};
+
 export type EventTheme = "light" | "dark";
 
 export type EventCardModel = {
