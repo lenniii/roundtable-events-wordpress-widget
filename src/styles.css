@@ -17,10 +17,13 @@
 html,
 body,
 #root {
-  min-width: 320px;
   min-height: 100%;
 }
 
 body {
   margin: 0;
+}
+
+.rtw-widget {
+  min-width: 320px;
 }
