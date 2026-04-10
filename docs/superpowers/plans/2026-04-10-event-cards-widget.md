@@ -35,7 +35,7 @@
 
 ### Modify
 
-- `src/App.tsx`
+- `src/events-widget.tsx`
   - Replace the scaffold hero with the widget demo shell
 - `src/styles.css`
   - Add class-based dark variant support and keep global styles minimal
@@ -493,13 +493,13 @@ git commit -m "feat: add reusable event card components"
 ## Task 4: Wire the demo page and theme-aware app shell
 
 **Files:**
-- Modify: `src/App.tsx`
+- Modify: `src/events-widget.tsx`
 - Modify: `src/styles.css`
 
 - [ ] **Step 1: Replace the scaffold app with the event widget demo**
 
 ```tsx
-// src/App.tsx
+// src/events-widget.tsx
 import { DEFAULT_THEME } from "./features/events/constants";
 import { EventCardGrid } from "./features/events/components/EventCardGrid";
 import { mockActivities } from "./features/events/mock-activities";
@@ -577,7 +577,7 @@ Check:
 - [ ] **Step 6: Commit the demo shell**
 
 ```bash
-git add src/App.tsx src/styles.css
+git add src/events-widget.tsx src/styles.css
 git commit -m "feat: render event cards widget demo"
 ```
 
