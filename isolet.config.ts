@@ -2,9 +2,18 @@ import fs from "node:fs";
 import { dirname, resolve } from "node:path";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
-import { defineConfig } from "vite";
+import { defineConfig } from "isolet-js";
+import { build } from "vite";
 
 const CSS_TEXT_PREFIX = "\0isolet-css-text:";
+
+const isoletConfig = defineConfig({
+  name: "roundtable-events-widget",
+  entry: "./src/main.tsx",
+  styles: "./src/styles.css",
+  format: ["iife"],
+  isolation: "shadow-dom",
+});
 
 const fallbackCssTextPlugin = () => ({
   name: "isolet-css-text-fallback",
@@ -52,28 +61,50 @@ const shadowWidgetStylesPlugin = () => ({
   },
 });
 
-export default defineConfig(async () => {
+const shouldRunIsoletBuild =
+  process.argv.includes("build") &&
+  process.argv.some(
+    (arg) =>
+      arg.endsWith("/cli.mjs") ||
+      arg.endsWith("/isolet") ||
+      arg === "isolet" ||
+      arg.includes("isolet-js-cli"),
+  );
+
+if (shouldRunIsoletBuild && process.env.RTW_ISOLET_BUILD_RAN !== "1") {
+  process.env.RTW_ISOLET_BUILD_RAN = "1";
+
   const { cssTextPlugin } = await import("isolet-js/plugins/css-text").catch(
     () => ({
       cssTextPlugin: fallbackCssTextPlugin,
     }),
   );
 
-  return {
+  await build({
+    configFile: false,
     plugins: [
       react(),
       tailwindcss(),
       cssTextPlugin(),
       shadowWidgetStylesPlugin(),
     ],
-    server: {
-      proxy: {
-        "/rt-events-api": {
-          target: "https://events.roundtable.it",
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/rt-events-api/, ""),
+    build: {
+      emptyOutDir: true,
+      cssCodeSplit: false,
+      lib: {
+        entry: isoletConfig.entry,
+        formats: isoletConfig.format,
+        fileName: () => `${isoletConfig.name}.js`,
+        name: "RoundtableEventsWidget",
+      },
+      outDir: "dist",
+      rollupOptions: {
+        output: {
+          inlineDynamicImports: true,
         },
       },
     },
-  };
-});
+  });
+}
+
+export default isoletConfig;

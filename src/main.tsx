@@ -1,9 +1,3 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import EventsWidget from "./events-widget.tsx";
+import { autoMountEventsWidget } from "./wordpress-widget";
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <EventsWidget />
-  </React.StrictMode>,
-);
+autoMountEventsWidget();
