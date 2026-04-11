@@ -3,7 +3,6 @@ import { Suspense } from "react";
 import { EventCardGridSkeleton } from "./features/events/components/EventCardGridSkeleton";
 import { EventsQueryBoundary } from "./features/events/components/EventsQueryBoundary";
 import { UpcomingEventsGrid } from "./features/events/components/UpcomingEventsGrid";
-import "./styles.css";
 
 const queryClient = new QueryClient({
   defaultOptions: {

@@ -2,12 +2,6 @@
 
 :host {
   display: block;
-  min-width: 320px;
-  font-family: "Instrument Sans", "Avenir Next", sans-serif;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 :host,
@@ -19,4 +13,9 @@
 
 .rtw-widget {
   min-width: 320px;
+  font-family: "Instrument Sans", "Avenir Next", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

@@ -1,79 +1,15 @@
-import fs from "node:fs";
-import { dirname, resolve } from "node:path";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
-
-const CSS_TEXT_PREFIX = "\0isolet-css-text:";
-
-const fallbackCssTextPlugin = () => ({
-  name: "isolet-css-text-fallback",
-  enforce: "pre" as const,
-  async resolveId(
-    this: {
-      resolve: (
-        source: string,
-        importer?: string,
-      ) => Promise<{ id: string } | null>;
-    },
-    source: string,
-    importer: string | undefined,
-  ) {
-    if (!source.endsWith(".css")) {
-      return;
-    }
-
-    if (source.startsWith(".") || source.startsWith("/")) {
-      const resolved = importer ? resolve(dirname(importer), source) : source;
-      return CSS_TEXT_PREFIX + encodeURIComponent(resolved);
-    }
-
-    const resolved = await this.resolve(source, importer);
-    return resolved ? CSS_TEXT_PREFIX + encodeURIComponent(resolved.id) : undefined;
-  },
-  load(id: string) {
-    if (!id.startsWith(CSS_TEXT_PREFIX)) {
-      return;
-    }
-
-    const filePath = decodeURIComponent(id.slice(CSS_TEXT_PREFIX.length));
-    return `export default ${JSON.stringify(fs.readFileSync(filePath, "utf8"))};`;
-  },
-});
-
-const shadowWidgetStylesPlugin = () => ({
-  name: "shadow-widget-styles",
-  transform(code: string, id: string) {
-    if (!id.endsWith("/src/events-widget.tsx")) {
-      return;
-    }
-
-    return code.replace('import "./styles.css";\n', "");
-  },
-});
-
-export default defineConfig(async () => {
-  const { cssTextPlugin } = await import("isolet-js/plugins/css-text").catch(
-    () => ({
-      cssTextPlugin: fallbackCssTextPlugin,
-    }),
-  );
-
-  return {
-    plugins: [
-      react(),
-      tailwindcss(),
-      cssTextPlugin(),
-      shadowWidgetStylesPlugin(),
-    ],
-    server: {
-      proxy: {
-        "/rt-events-api": {
-          target: "https://events.roundtable.it",
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/rt-events-api/, ""),
-        },
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+  server: {
+    proxy: {
+      "/rt-events-api": {
+        target: "https://events.roundtable.it",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/rt-events-api/, ""),
       },
     },
-  };
+  },
 });
