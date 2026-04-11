@@ -13,6 +13,12 @@ bun run build
 
 The production bundle is written to `dist/roundtable-events-widget.js`.
 
+## Publish
+
+GitHub Actions publishes the built widget bundle as a GitHub Release asset when code is pushed to `main`. The same workflow can also be started manually from the Actions tab with the `Publish` workflow.
+
+Each run creates a release for the current commit and uploads `dist/roundtable-events-widget.js`.
+
 ## Embed
 
 Add a container with the expected id:
