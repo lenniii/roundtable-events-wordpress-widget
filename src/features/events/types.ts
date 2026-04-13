@@ -42,3 +42,9 @@ export type EventCardModel = {
   calendarUrl: string | null;
   description: string | null;
 };
+
+export type EventsWidgetProps = {
+  events: EventCardModel[];
+  theme: EventTheme;
+  integrationError: string | null;
+};

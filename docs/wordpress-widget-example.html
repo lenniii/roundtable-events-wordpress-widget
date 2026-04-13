@@ -37,9 +37,30 @@
         container below as soon as the script loads.
       </p>
 
-      <div id="events-widget"></div>
+      <div id="events-widget" data-theme="dark"></div>
     </main>
 
+    <script>
+      const events = [
+        {
+          id: 294,
+          title: "RT36 VERONA - CONVIVIALE",
+          metaLabel: "RT 36 Verona · Zona 1",
+          location: "MR MARTINI",
+          startDate: "2026-04-09T20:00:00+02:00",
+          endDate: "2026-04-09T22:00:00+02:00",
+          imageUrl:
+            "https://roundtable-prd.s3.eu-central-1.amazonaws.com/1989/cover_picture/56c3310e-06b6-4eb4-9335-16b1335446ec.jpeg",
+          eventUrl: "https://events.roundtable.it/activity/2026-04-09-rt36-verona-conviviale/",
+          mapsUrl: "https://www.google.com/maps/search/?api=1&query=MR%20MARTINI",
+          calendarUrl:
+            "https://www.google.com/calendar/render?action=TEMPLATE&text=RT36%20VERONA%20-%20CONVIVIALE",
+          description: "RT36 VERONA - CONVIVIALE",
+        },
+      ];
+
+      document.getElementById("events-widget").dataset.events = JSON.stringify(events);
+    </script>
     <script src="../dist/roundtable-events-widget.js"></script>
   </body>
 </html>

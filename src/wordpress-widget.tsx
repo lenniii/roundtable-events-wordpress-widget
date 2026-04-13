@@ -1,13 +1,15 @@
 import { createIsolet } from "isolet-js";
 import { react } from "isolet-js/react";
 import EventsWidget from "./events-widget";
+import { parseWidgetMountProps } from "./features/events/lib/widget-mount-props";
+import type { EventsWidgetProps } from "./features/events/types";
 import widgetStyles from "./styles.css?inline";
 
 const FONT_STYLESHEET_ID = "rtw-instrument-sans-font";
 const FONT_STYLESHEET_URL =
   "https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap";
 
-const eventsWidgetIsolet = createIsolet({
+const eventsWidgetIsolet = createIsolet<EventsWidgetProps>({
   name: "roundtable-events-widget",
   mount: react(EventsWidget),
   css: widgetStyles,
@@ -29,12 +31,12 @@ function ensureFontStylesheet(doc: Document) {
   doc.head?.appendChild(link);
 }
 
-function mountIntoTarget(target: HTMLElement) {
-  if (eventsWidgetIsolet.mounted) {
-    return mountedTarget === target ? eventsWidgetIsolet : null;
+function mountIntoTarget(target: HTMLElement, props: EventsWidgetProps) {
+  if (eventsWidgetIsolet.mounted && mountedTarget !== target) {
+    return null;
   }
 
-  eventsWidgetIsolet.mount(target);
+  eventsWidgetIsolet.mount(target, props);
   mountedTarget = target;
   mountObserver?.disconnect();
   mountObserver = null;
@@ -71,5 +73,11 @@ export function autoMountEventsWidget(doc: Document = document) {
   }
 
   ensureFontStylesheet(doc);
-  return mountIntoTarget(target);
+  return mountIntoTarget(
+    target,
+    parseWidgetMountProps({
+      events: target.dataset.events,
+      theme: target.dataset.theme,
+    }),
+  );
 }

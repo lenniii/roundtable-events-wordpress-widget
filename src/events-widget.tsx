@@ -1,32 +1,32 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Suspense } from "react";
-import { EventCardGridSkeleton } from "./features/events/components/EventCardGridSkeleton";
-import { EventsQueryBoundary } from "./features/events/components/EventsQueryBoundary";
-import { UpcomingEventsGrid } from "./features/events/components/UpcomingEventsGrid";
+import { EventsIntegrationErrorState } from "./features/events/components/EventsIntegrationErrorState";
+import { EventCardGrid } from "./features/events/components/EventCardGrid";
+import { EventsEmptyState } from "./features/events/components/EventsEmptyState";
+import type { EventsWidgetProps } from "./features/events/types";
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: false,
-    },
-  },
-});
-
-export default function EventsWidget() {
+export default function EventsWidget({
+  events,
+  theme,
+  integrationError,
+}: EventsWidgetProps) {
   return (
-    <QueryClientProvider client={queryClient}>
-      <section
-        id="events-widget"
-        className="rtw-widget min-h-screen bg-stone-100 px-4 py-6 text-slate-900 dark:bg-[#1f2227] dark:text-zinc-100 sm:px-6 lg:px-8"
-      >
-        <div className="mx-auto max-w-7xl">
-          <EventsQueryBoundary>
-            <Suspense fallback={<EventCardGridSkeleton count={6} />}>
-              <UpcomingEventsGrid />
-            </Suspense>
-          </EventsQueryBoundary>
-        </div>
-      </section>
-    </QueryClientProvider>
+    <section
+      id="events-widget"
+      className={[
+        "rtw-widget min-h-screen bg-stone-100 px-4 py-6 text-slate-900 sm:px-6 lg:px-8",
+        theme === "dark" ? "dark bg-[#1f2227] text-zinc-100" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      <div className="mx-auto max-w-7xl">
+        {integrationError ? (
+          <EventsIntegrationErrorState message={integrationError} />
+        ) : events.length === 0 ? (
+          <EventsEmptyState />
+        ) : (
+          <EventCardGrid events={events} />
+        )}
+      </div>
+    </section>
   );
 }
